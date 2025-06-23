@@ -46,17 +46,59 @@ const signup = async (req, res) => {
         console.log("error in signup controller", error.message)
         return res.status(500).json({ message: "Internal server error" })
     }
-    res.send("sign up page 2")
+
 }
 
-const login = (req, res) => {
-    res.send("login page 2")
+const login = async (req, res) => {
+    const { email, password } = req.body
+    try {
+
+        if (!email || !password) {
+            return res.status(400).json({ message: "Enter all the credentials" })
+        }
+        const user = await User.findOne({ email })
+        if (!user) {
+            return res.status(400).json({ message: "Invalid credentials" }) //invalid dikha rhe to be aware from the hacker
+        }
+        const isPasswordCorrect = await bcrypt.compare(password, user.password);
+        if (!isPasswordCorrect) {
+            return res.status(400).json({ message: "Invalid credentials" })
+        }
+
+        //if password correct
+        generateToken(user._id, res)
+
+        res.status(200).json({
+            _id: user._id,
+            fullName: user.fullName,
+            email: user.email,
+            profilePic: user.profilePic,
+        })
+
+
+    }
+    catch (error) {
+        console.log("error in login controller", error.message)
+        return res.status(500).json({ message: "Internal server error" })
+    }
+
 }
 
 
 const logout = (req, res) => {
-    res.send("logout page 2")
+    try {
+        res.cookie("jwt", "", { maxAge: 0 })  //cookie (jwt) ko khali kr diye
+        return res.status(200).json({ message: "Logout successfully" })
+    }
+    catch (error) {
+        console.log("error in Logout controller", error.message)
+        return res.status(500).json({ message: "Internal server error" })
+    }
+}
+
+const updateProfile = async (req, res) => {
+    //yha kaam kro
 }
 
 
-module.exports = { signup, login, logout }
+module.exports = { signup, login, logout, updateProfile }
