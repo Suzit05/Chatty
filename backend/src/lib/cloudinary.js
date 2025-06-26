@@ -1,6 +1,6 @@
-const v2 = require("cloudinary")
-const config = require("dotenv")
-config()
+const cloudinary = require("cloudinary")
+const dotenv = require("dotenv")
+dotenv.config();
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINAR_CLOUD_NAME,

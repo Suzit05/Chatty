@@ -1,11 +1,11 @@
 const jwt = require("jsonwebtoken")
 const User = require("../models/user.model")
 
-const protectRoute = async (req, next, res) => {
+const protectRoute = async (req, res, next) => {
 
 
     try {
-        const token = res.cookies.jwt //jwt naam rkhe hai
+        const token = req.cookies.jwt //jwt naam rkhe hai
 
         if (!token) {
             return res.status(401).json({ message: "Unauthorized- Token not available" })
@@ -23,7 +23,7 @@ const protectRoute = async (req, next, res) => {
             return res.status(404).json({ message: "User not found" })
         }
 
-        req.user = user //jiska req hai usko access de do
+        req.user = user //jiska req hai usko access de do , isse baad m user dhudne m prblm nhi hoga
         next()  //next function pr chl jaega
     }
     catch (error) {

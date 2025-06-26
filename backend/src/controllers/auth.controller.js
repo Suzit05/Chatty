@@ -1,5 +1,6 @@
 //routes bda na ho jaye , isliye hrr route k separate controller bnaya jaye
 const generateToken = require("../lib/utils")
+const cloudinary = require("../lib/cloudinary")
 const User = require("../models/user.model")
 const bcrypt = require("bcryptjs")
 
@@ -97,8 +98,39 @@ const logout = (req, res) => {
 }
 
 const updateProfile = async (req, res) => {
-    //yha kaam kro
+    try {
+        const { profilePic } = req.body
+        const userId = req.user._id; //protect route k help se
+
+        if (!profilePic) {
+            return res.status(400).json({ message: "Profile pic is required" })
+        }
+
+        const uploadResponse = await cloudinary.uploader.upload(profilePic);
+        const updatedUser = await User.findByIdAndUpdate(
+            userId, { profilePic: uploadResponse.secure_url },
+            { new: true }
+        );
+
+        res.status(200).json(updatedUser);
+    }
+    catch (error) {
+        res.status(400).json({ message: "Internal server error" })
+        console.log("error in update profile: ", error);
+    }
+
+}
+
+const checkAuth = (req, res) => {
+    try {
+        res.status(200).json(req.user);
+    }
+    catch (error) {
+        res.status(500).json({ message: "Internal server error" })
+        console.log("error in auth controller", error.message)
+    }
 }
 
 
-module.exports = { signup, login, logout, updateProfile }
+
+module.exports = { signup, login, logout, updateProfile, checkAuth }

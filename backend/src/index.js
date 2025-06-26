@@ -6,6 +6,7 @@ const cookieParser = require("cookie-parser")
 dotenv.config();
 
 const authRoutes = require("./routes/auth.route")
+const messageRoutes = require("./routes/message.route")
 
 
 const PORT = process.env.PORT
@@ -14,6 +15,7 @@ app.use(express.json())
 app.use(cookieParser())
 
 app.use("/api/auth", authRoutes)
+app.use("/api/message", messageRoutes)
 
 app.get("/", (req, res) => {
     res.send("welcomt to index page")
