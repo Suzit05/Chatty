@@ -56,6 +56,12 @@ const sendMessage = async (req, res) => {
         text,
         image: imageUrl
     })
+
+    await newMessage.save()
+
+    //todo:realtime functionality goes here
+
+    res.status(201).json(newMessage)
 }
 
-module.exports = { getUsersForSidebar, getMessages }
+module.exports = { getUsersForSidebar, getMessages, sendMessage }

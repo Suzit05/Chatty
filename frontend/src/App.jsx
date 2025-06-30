@@ -1,34 +1,40 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useEffect } from 'react'
+import Navbar from './Components/Navbar'
+import { Navigate, Route, Routes } from 'react-router-dom'
+import Homepage from './Pages/Homepage'
+import SignupPage from './Pages/SignupPage'
+import LoginPage from './Pages/LoginPage'
+import ProfilePage from './Pages/ProfilePage'
+import SettingPage from './Pages/SettingPage'
+import { useAuthStore } from './store/useAuthStore'
+import { Loader } from "lucide-react"
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
+  const { authUser, checkAuth, isCheckingAuth } = useAuthStore() //destructure from the useAuthStore hook , useAuthStore se 
+  //state liya jaa rha
+
+  useEffect(() => {
+    checkAuth()
+  }, [checkAuth]);
+
+  console.log({ authUser })
+  if (isCheckingAuth && !authUser) return (
+    <div className='flex items-center justify-center h-screen'>
+      <Loader className="size-10 animate-spin" />
+    </div>
+  )
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div >
+      <Navbar></Navbar>
+      <Routes>
+        <Route path='/' element={authUser ? <Homepage /> : <Navigate to="/login" />}></Route>
+        <Route path='/signup' element={!authUser ? <SignupPage /> : <Navigate to="/" />}></Route> {/*authuser nhi to signup..if hai to homepage */}
+        <Route path='/login' element={!authUser ? <LoginPage /> : <Navigate to="/" />}></Route>
+        <Route path='/profile' element={authUser ? <ProfilePage /> : <Navigate to="/login" />}></Route>
+        <Route path='/settings' element={<SettingPage />}></Route>
+      </Routes>
+    </div>
   )
 }
 
