@@ -23,5 +23,9 @@ export const useAuthStore = create((set) => ({ //ek state hai jo set m initial a
         } finally {
             set({ isCheckingAuth: false })
         }
+    },
+
+    signup: async (data) => {
+
     }
 }))
