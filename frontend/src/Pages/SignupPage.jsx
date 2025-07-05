@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { useAuthStore } from '../store/useAuthStore'
 import { Eye, EyeOff, Loader2, Mail, MessageSquare, User } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import AuthImagePattern from '../Components/AuthImagePattern'
+import toast from "react-hot-toast"
 
 const SignupPage = () => {
     const [showPassword, setShowPassword] = useState(false)
@@ -15,8 +17,23 @@ const SignupPage = () => {
 
 
     const { signup, isSigningUp } = useAuthStore();
-    const validateForm = () => { }
-    const handleSubmit = (e) => { e.preventDefault() }
+    const validateForm = () => {
+        //form validate kro
+        if (!formData.fullName.trim()) return toast.error("Full name is required")
+        if (!formData.email.trim()) return toast.error("Email is required")
+        if (!formData.password) return toast.error("Password is required")
+        if ((!formData.fullName.trim()) && (!formData.email.trim()) && (formData.password)) return toast.error("Enter the credentials")
+        if (formData.password.length < 6) return toast.error("Password length must be atleast 6 character")
+
+        return true; //else
+    }
+    const handleSubmit = (e) => {
+
+        e.preventDefault()
+        console.log("sign u clicked")
+        const success = validateForm() //agr validate ho gya hai to, success=true
+        if (success === true) return signup(formData)
+    }
     return (
         <div className=' w-full h-screen flex justify-center items-center'>
             {/**left side */}
@@ -28,7 +45,7 @@ const SignupPage = () => {
                     </div>
                 </div>
                 <div>
-                    <form >
+                    <form onSubmit={handleSubmit}>
                         <div className='flex flex-col space-y-4'>
                             {/**full name */}
                             <div className="flex flex-col justify-center items-center space-y-2">
@@ -39,7 +56,7 @@ const SignupPage = () => {
                                         id="fullName"
                                         value={formData.fullName}
                                         type="text"
-                                        placeholder="John Doe"
+                                        placeholder="Ravi Gupta"
                                         onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
                                         className="w-full border border-zinc-200 rounded-md p-2 pr-10"
                                     />
@@ -54,7 +71,7 @@ const SignupPage = () => {
                                     <input
                                         value={formData.email}
                                         type="email"
-                                        placeholder="John@gmail.com"
+                                        placeholder="example@gmail.com"
                                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                         className="w-full border border-zinc-200 rounded-md p-2 pr-10"
                                     />
@@ -86,7 +103,7 @@ const SignupPage = () => {
 
                                 </div>
                             </div>
-                            <button type='submit' className='bg-purple-500 p-1 rounded-md' disabled={isSigningUp}>
+                            <button type='submit' className='bg-blue-900 p-1 rounded-md' disabled={isSigningUp}>
                                 {isSigningUp ? (
                                     <>
                                         <Loader2 className='size-5 animate-spin' />
@@ -106,7 +123,12 @@ const SignupPage = () => {
                 </div>
             </div>
             {/**right side */}
-            <div className='bg-pink-500 w-[50%] h-full flex flex-col justify-center items-center '>w</div>
+            <div className=' w-[50%] h-full flex flex-col justify-center items-center '>
+                <AuthImagePattern
+                    title="Join our community"
+                    subtitle="Connect with friends , share moments , stay in touch with each other."
+                />
+            </div>
         </div>
     )
 }
