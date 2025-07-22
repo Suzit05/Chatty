@@ -46,8 +46,8 @@ const Sidebar = () => {
                 </div> */}
             </div>
 
-            {/* <div className="overflow-y-auto w-full py-3">
-                {filteredUsers.map((user) => (
+            <div className="overflow-y-auto w-full py-3">
+                {users.map((user) => (
                     <button
                         key={user._id}
                         onClick={() => setSelectedUser(user)}
@@ -71,8 +71,9 @@ const Sidebar = () => {
                             )}
                         </div>
 
+
                         {/* User info - only visible on larger screens */}
-            {/* <div className="hidden lg:block text-left min-w-0">
+                        <div className="hidden lg:block text-left min-w-0">
                             <div className="font-medium truncate">{user.fullName}</div>
                             <div className="text-sm text-zinc-400">
                                 {onlineUsers.includes(user._id) ? "Online" : "Offline"}
@@ -81,10 +82,8 @@ const Sidebar = () => {
                     </button>
                 ))}
 
-                {filteredUsers.length === 0 && (
-                    <div className="text-center text-zinc-500 py-4">No online users</div>
-                )}
-            </div> */}
+
+            </div>
         </aside>
     )
 }
